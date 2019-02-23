@@ -1,0 +1,21 @@
+fileFormatVersion: 2
+guid: e7b1e2fdb3736444ca2dfa09e3cc2fa0
+ScriptedImporter:
+  fileIDToRecycleName:
+    11400000: <root>
+    11400002: Player/Shoot
+    11400004: Player/Movement
+    11400006: Player/Jump
+  externalObjects: {}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+  script: {fileID: 11500000, guid: e2fdc6edf8744b38b702a2a5ee3541b2, type: 3}
+  generateWrapperCode: 1
+  wrapperCodePath: 
+  wrapperClassName: 
+  wrapperCodeNamespace: 
+  generateActionEvents: 0
+  generateInterfaces: 0
+  actionGuids: []
+  actionMapGuids: []
