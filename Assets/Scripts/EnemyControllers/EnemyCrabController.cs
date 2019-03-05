@@ -24,15 +24,17 @@ public class EnemyCrabController : EnemyControllerBase
         _isNearWallLeft = Physics2D.Raycast(transform.position, -Vector3.right, 0.3f, _raycastLayerMask);
         _isNearWallRight = Physics2D.Raycast(transform.position, Vector3.right, 0.3f, _raycastLayerMask);
 
-        _rb.constraints = _canMove ? RigidbodyConstraints2D.FreezeRotation : RigidbodyConstraints2D.FreezePositionX; 
+        _rb.constraints = _canMove ? RigidbodyConstraints2D.FreezeRotation : RigidbodyConstraints2D.FreezePositionX;
 
         Move();
         _animator.SetBool("IsMoving", _canMove);
+
+        if (_isDead) _rb.constraints = RigidbodyConstraints2D.FreezeAll;
     }
 
-    void Move()
+    public void Move()
     {
-        if (_canMove)
+        if (_canMove && !_isDead)
         {
             if (_isNearWallLeft)
             {

@@ -8,14 +8,14 @@ public class PlayerController : MonoBehaviour
     public InputMaster Controls;
     public GameObject BulletPrefab, DeathEffect;
     public Transform BulletPoint, BulletPointUp, BulletPointDown, BulletPointWall;
-    public RectTransform HeathFill;
     public ParticleSystem ChargedJumpEffect;
     public float MaxHealth, Speed, JumpHeight, JumpTime, WallJumpTime, InvunerableBlinks;
     public Vector2 WallJumpForce;
     public LayerMask _raycastLayerMask;
+    RectTransform HeathFill;
     Rigidbody2D _rb;
     Vector2 _direction;
-    bool _btnJumpPressed = false, _isGrounded, _isDucking, _isLookingUp, _isNearWall, _isWallClinging, _isHovering, _isVulnerable;
+    bool _btnJumpPressed = false, _isGrounded, _isDucking, _isLookingUp, _isNearWallLeft, _isNearWallRight, _isWallClinging, _isHovering, _isVulnerable;
     public bool HaveChargedJump, HaveWallJump;
     float currentJumptime, currentJumpHeight, currentWallJumptime, currentWallJumpHeight, _currentHealth;
     int JumpTimes = 1;
@@ -50,6 +50,7 @@ public class PlayerController : MonoBehaviour
         _lineRenderer = GetComponentInChildren<LineRenderer>();
         ghostTrail = GetComponentInChildren<SpriteGhostTrailRenderer>();
         _spriteRenderer = GetComponentInChildren<SpriteRenderer>();
+        HeathFill = GameObject.FindWithTag("HealthFill").GetComponent<RectTransform>();
         _currentHealth = MaxHealth;
         UpdateHealth();
     }
@@ -65,15 +66,15 @@ public class PlayerController : MonoBehaviour
         var y = currentJumpHeight * Time.deltaTime * 60;
 
         //Draw charged jump direction line
-        if (!_isHovering)
-        {
-            _rb.AddForce(new Vector2(x, y), ForceMode2D.Force);
-            _lineRenderer.SetPosition(1, Vector2.zero);
-        }
-        else
-        {
-            _lineRenderer.SetPosition(1, _direction / 2);
-        }
+        // if (!_isHovering)
+        // {
+        _rb.AddForce(new Vector2(x, y), ForceMode2D.Force);
+        //     _lineRenderer.SetPosition(1, Vector2.zero);
+        // }
+        // else
+        // {
+        //     _lineRenderer.SetPosition(1, _direction / 2);
+        // }
 
         JumpUpdate();
         WallJumpUpdate();
@@ -81,7 +82,10 @@ public class PlayerController : MonoBehaviour
         _isGrounded = Physics2D.Raycast(transform.position, -Vector3.up, 0.05f, _raycastLayerMask);
 
         if (HaveWallJump)
-            _isNearWall = Physics2D.Raycast(transform.position + new Vector3(0, 0.2f, 0), -Vector3.right, 0.3f, _raycastLayerMask) || Physics2D.Raycast(transform.position + new Vector3(0, 0.2f, 0), Vector3.right, 0.3f, _raycastLayerMask);
+        {
+            _isNearWallLeft = Physics2D.Raycast(transform.position + new Vector3(0, 0.11f, 0), -Vector3.right, 0.11f, _raycastLayerMask);
+            _isNearWallRight = Physics2D.Raycast(transform.position + new Vector3(0, 0.2f, 0), Vector3.right, 0.3f, _raycastLayerMask);
+        }
 
         if (_isGrounded) JumpTimes = 1;
 
@@ -95,14 +99,16 @@ public class PlayerController : MonoBehaviour
         _btnJumpPressed = !_btnJumpPressed;
 
         //Charged jump
-        if (!_btnJumpPressed && _isHovering && !_isWallClinging && JumpTimes > 0 && !_isGrounded)
+        if (_btnJumpPressed && JumpTimes > 0 && !_isGrounded && HaveChargedJump)
         {
             JumpTimes = 0;
-            _rb.AddForce(new Vector2(_direction.x, _direction.y), ForceMode2D.Impulse);
+            // _rb.AddForce(new Vector2(_direction.x, _direction.y/2), ForceMode2D.Impulse);
+            ChargedJumpEffect.Play();
+            currentJumptime = JumpTime;
+            currentJumpHeight = JumpHeight;
         }
-
         //Normal jump
-        if (_isGrounded && _btnJumpPressed)
+        else if (_isGrounded && _btnJumpPressed)
         {
             anim.SetTrigger("Jump");
             currentJumptime = JumpTime;
@@ -126,20 +132,20 @@ public class PlayerController : MonoBehaviour
         }
         else
         {
-            //Charged jump
-            if (_btnJumpPressed && JumpTimes > 0 && !_isWallClinging && _rb.velocity.y <= 0 && HaveChargedJump)
-            {
-                _rb.constraints = RigidbodyConstraints2D.FreezeAll;
-                if (!ChargedJumpEffect.isPlaying)
-                    ChargedJumpEffect.Play();
-                _isHovering = true;
-            }
-            else
-            {
-                _rb.constraints = RigidbodyConstraints2D.FreezeRotation;
-                ChargedJumpEffect.Stop();
-                _isHovering = false;
-            }
+            // //Charged jump
+            // if (_btnJumpPressed && JumpTimes > 0 && !_isWallClinging && _rb.velocity.y <= 0 && HaveChargedJump)
+            // {
+            //     // _rb.constraints = RigidbodyConstraints2D.FreezeAll;
+            //     if (!ChargedJumpEffect.isPlaying)
+            //         ChargedJumpEffect.Play();
+            //     // _isHovering = true;
+            // }
+            // else
+            // {
+            //     // _rb.constraints = RigidbodyConstraints2D.FreezeRotation;
+            //     ChargedJumpEffect.Stop();
+            //     // _isHovering = false;
+            // }
             currentJumpHeight = 0;
         }
     }
@@ -284,7 +290,19 @@ public class PlayerController : MonoBehaviour
 
     void HandleWallAnimation()
     {
-        _isWallClinging = !_isGrounded && _isNearWall && _direction.x != 0 ? true : false;
+        if (!_isGrounded && _isNearWallLeft && _direction.x < 0)
+        {
+            _isWallClinging = true;
+        }
+        else if (!_isGrounded && _isNearWallRight && _direction.x > 0)
+        {
+            _isWallClinging = true;
+        }
+        else
+        {
+            _isWallClinging = false;
+        }
+        
         //Mirror sprite
         var mirror = _isWallClinging ? -1 : 1;
         anim.transform.localScale = new Vector3(mirror, 1, 1);

@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 1103054227}
   - component: {fileID: 6566981838098425270}
   m_Layer: 0
-  m_Name: NewPowerEffect
+  m_Name: NewPower
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -662,7 +662,7 @@ ParticleSystem:
   ShapeModule:
     serializedVersion: 6
     enabled: 1
-    type: 5
+    type: 10
     angle: 1.6
     length: 5
     boxThickness: {x: 0, y: 0, z: 0}
@@ -4677,7 +4677,7 @@ ParticleSystemRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 1676111357
   m_SortingLayer: 3
-  m_SortingOrder: 0
+  m_SortingOrder: 1
   m_RenderMode: 0
   m_SortMode: 0
   m_MinParticleSize: 0

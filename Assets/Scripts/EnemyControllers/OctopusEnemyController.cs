@@ -16,6 +16,7 @@ public class OctopusEnemyController : EnemyControllerBase
     // Update is called once per frame
     void Update()
     {
+        if (_isDead) _rb.constraints = RigidbodyConstraints2D.FreezeAll;
     }
 
     void OnTriggerStay2D(Collider2D other)

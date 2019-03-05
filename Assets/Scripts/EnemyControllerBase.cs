@@ -1,11 +1,13 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 
 public class EnemyControllerBase : MonoBehaviour
 {
     public float Damage, Speed;
     public float MaxHealth;
+    public UnityEvent OnDeathEvent;
     [HideInInspector]
     public float _currentHealth;
     [HideInInspector]
@@ -14,6 +16,8 @@ public class EnemyControllerBase : MonoBehaviour
     public SpriteRenderer _spriteRenderer;
     [HideInInspector]
     public Animator _animator;
+    [HideInInspector]
+    public bool _isDead;
     // Start is called before the first frame update
     void Start()
     {
@@ -31,8 +35,12 @@ public class EnemyControllerBase : MonoBehaviour
     public void TakeDamage(float damage)
     {
         _currentHealth -= damage;
-        if (_currentHealth <= 0)
+        if (_currentHealth <= 0 && !_isDead)
+        {
             _animator.SetTrigger("Die");
+            OnDeathEvent.Invoke();
+            _isDead = true;
+        }
         else
             StartCoroutine("HitAnimation");
     }
@@ -47,7 +55,7 @@ public class EnemyControllerBase : MonoBehaviour
 
     public void Destroy()
     {
-        Destroy(gameObject);
+        gameObject.SetActive(false);
     }
 
     void OnCollisionStay2D(Collision2D other)
@@ -70,6 +78,15 @@ public class EnemyControllerBase : MonoBehaviour
                 var bullet = other.transform.GetComponent<BulletController>();
                 TakeDamage(bullet.Damage);
                 break;
+        }
+
+        switch (other.transform.tag)
+        {
+            case "Player":
+                var player = other.transform.GetComponent<PlayerController>();
+                player.TakeDamage(Damage);
+                break;
+
         }
     }
 }

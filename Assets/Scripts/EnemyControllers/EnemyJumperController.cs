@@ -22,6 +22,8 @@ public class EnemyJumperController : EnemyControllerBase
     {
         _isGrounded = Physics2D.Raycast(transform.position, -Vector3.up, 0.2f, _raycastLayerMask);
         _animator.SetBool("IsMoving", !_isGrounded);
+
+        if(_isDead) _rb.constraints = RigidbodyConstraints2D.FreezeAll;
     }
 
     void BehaviourLoop()
