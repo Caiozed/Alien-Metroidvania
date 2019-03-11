@@ -55,7 +55,7 @@ public class EnemyControllerBase : MonoBehaviour
 
     public void Destroy()
     {
-        gameObject.SetActive(false);
+        this.gameObject.SetActive(false);
     }
 
     void OnCollisionStay2D(Collision2D other)

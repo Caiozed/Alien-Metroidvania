@@ -16,7 +16,7 @@ public class BulletController : MonoBehaviour
         _rb = GetComponent<Rigidbody2D>();
         _circleCollider = GetComponent<CircleCollider2D>();
         _rb.AddForce(transform.right * Speed * Time.deltaTime * 30, ForceMode2D.Force);
-        Destroy(gameObject, 5);
+        Destroy(gameObject, 1.2f);
     }
 
     // Update is called once per frame

@@ -7,7 +7,7 @@ public class PlayerController : MonoBehaviour
 {
     public InputMaster Controls;
     public GameObject BulletPrefab, DeathEffect;
-    public Transform BulletPoint, BulletPointUp, BulletPointDown, BulletPointWall;
+    public Transform BulletPoint, BulletPointUp, BulletPointDown, BulletPointWall, BulletPoints;
     public ParticleSystem ChargedJumpEffect;
     public float MaxHealth, Speed, JumpHeight, JumpTime, WallJumpTime, InvunerableBlinks;
     public Vector2 WallJumpForce;
@@ -84,7 +84,7 @@ public class PlayerController : MonoBehaviour
         if (HaveWallJump)
         {
             _isNearWallLeft = Physics2D.Raycast(transform.position + new Vector3(0, 0.11f, 0), -Vector3.right, 0.11f, _raycastLayerMask);
-            _isNearWallRight = Physics2D.Raycast(transform.position + new Vector3(0, 0.2f, 0), Vector3.right, 0.3f, _raycastLayerMask);
+            _isNearWallRight = Physics2D.Raycast(transform.position + new Vector3(0, 0.11f, 0), Vector3.right, 0.13f, _raycastLayerMask);
         }
 
         if (_isGrounded) JumpTimes = 1;
@@ -99,11 +99,10 @@ public class PlayerController : MonoBehaviour
         _btnJumpPressed = !_btnJumpPressed;
 
         //Charged jump
-        if (_btnJumpPressed && JumpTimes > 0 && !_isGrounded && HaveChargedJump)
+        if (_btnJumpPressed && JumpTimes > 0 && !_isGrounded && HaveChargedJump && !_isWallClinging)
         {
             JumpTimes = 0;
             // _rb.AddForce(new Vector2(_direction.x, _direction.y/2), ForceMode2D.Impulse);
-            ChargedJumpEffect.Play();
             currentJumptime = JumpTime;
             currentJumpHeight = JumpHeight;
         }
@@ -158,6 +157,7 @@ public class PlayerController : MonoBehaviour
             currentWallJumptime -= Time.deltaTime;
             var y2 = WallJumpForce.y * Time.deltaTime * 60;
             _rb.velocity = new Vector2(_rb.velocity.x, 0);
+            Debug.Log(currentWallJumpHeight);
             _rb.AddForce(new Vector2(currentWallJumpHeight, y2), ForceMode2D.Force);
         }
         else
@@ -180,7 +180,9 @@ public class PlayerController : MonoBehaviour
             if (_direction.x != 0)
             {
                 var lookDirection = _direction.x > 0 ? 0 : 180;
-                anim.transform.eulerAngles = new Vector2(0, lookDirection);
+                var flipX = _direction.x > 0 ? false : true;
+                _spriteRenderer.flipX = flipX;
+                BulletPoints.eulerAngles = new Vector2(0, lookDirection);
             }
         }
         else
@@ -292,17 +294,19 @@ public class PlayerController : MonoBehaviour
     {
         if (!_isGrounded && _isNearWallLeft && _direction.x < 0)
         {
+            JumpTimes = 1;
             _isWallClinging = true;
         }
         else if (!_isGrounded && _isNearWallRight && _direction.x > 0)
         {
+            JumpTimes = 1;
             _isWallClinging = true;
         }
         else
         {
             _isWallClinging = false;
         }
-        
+
         //Mirror sprite
         var mirror = _isWallClinging ? -1 : 1;
         anim.transform.localScale = new Vector3(mirror, 1, 1);

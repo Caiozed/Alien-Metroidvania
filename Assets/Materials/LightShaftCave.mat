@@ -57,11 +57,11 @@ Material:
         m_Offset: {x: 0, y: 0}
     m_Floats:
     - _BumpScale: 1
-    - _Contrast: 2.2
+    - _Contrast: 1.4
     - _Cutoff: 0.5
     - _DetailNormalMapScale: 1
     - _DstBlend: 0
-    - _Fade: 1
+    - _Fade: 0
     - _GlossMapScale: 1
     - _Glossiness: 0.5
     - _GlossyReflections: 1
@@ -69,12 +69,12 @@ Material:
     - _Mode: 0
     - _OcclusionStrength: 1
     - _Parallax: 0.02
-    - _Shear: 2.27
+    - _Shear: 4.24
     - _Size: 30
-    - _Skew: -0.08
+    - _Skew: -0.48
     - _SmoothnessTextureChannel: 0
     - _SpecularHighlights: 1
-    - _Speed: 0.4
+    - _Speed: 0.2
     - _SrcBlend: 1
     - _UVSec: 0
     - _ZWrite: 1
