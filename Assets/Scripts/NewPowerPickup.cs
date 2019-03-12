@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class NewPowerPickup : MonoBehaviour
 {
@@ -25,6 +26,8 @@ public class NewPowerPickup : MonoBehaviour
         {
             other.GetComponent<PlayerController>().EnablePower(this.PowerToEnable);
             Instantiate(PickupEffect, transform.position, transform.rotation);
+            GameObject.FindGameObjectWithTag("UIText").GetComponent<Text>().text = "-------------New Module Online---------------";
+            GameObject.FindGameObjectWithTag("UIAnimator").GetComponent<Animator>().SetTrigger("TextBlink");
             Destroy(gameObject);
         }
     }

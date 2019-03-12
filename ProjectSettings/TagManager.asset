@@ -8,6 +8,8 @@ TagManager:
   - NewPower
   - Enemy
   - HealthFill
+  - UIText
+  - UIAnimator
   layers:
   - Default
   - TransparentFX
