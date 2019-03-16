@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using ActionCode2D.Renderers;
 using UnityEngine.Experimental.Input;
 public class PlayerController : MonoBehaviour
@@ -62,6 +63,8 @@ public class PlayerController : MonoBehaviour
 
     void FixedUpdate()
     {
+        if (PauseManager.Instance._isPaused) return;
+
         var x = _direction.x * Speed * Time.deltaTime * 60;
         var y = currentJumpHeight * Time.deltaTime * 60;
 
@@ -168,6 +171,8 @@ public class PlayerController : MonoBehaviour
 
     void Move(Vector2 direction)
     {
+        if (PauseManager.Instance._isPaused) return;
+
         _isDucking = direction.y < 0 ? true : false;
         _isLookingUp = direction.y > 0 ? true : false;
         anim.SetBool("isDucking", _isDucking);
@@ -239,7 +244,9 @@ public class PlayerController : MonoBehaviour
             gameObject.layer = 11;
             if (_currentHealth <= 0)
             {
-                Destroy(gameObject);
+                gameObject.SetActive(false);
+                Invoke("RestartLevel", 3);
+                GameObject.Find("Sprites-Ghosts").SetActive(false);
                 Instantiate(DeathEffect, anim.transform.position, transform.rotation);
             }
             else
@@ -313,6 +320,10 @@ public class PlayerController : MonoBehaviour
         anim.SetBool("isWallClinging", _isWallClinging);
     }
 
+    void RestartLevel()
+    {
+        SceneManager.LoadScene(0);
+    }
     void OnEnable()
     {
         Controls.Enable();

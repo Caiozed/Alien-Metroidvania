@@ -9,30 +9,24 @@
                     "name": "Jump",
                     "id": "acb0627d-41ac-48de-bd91-6ae5018ce0e7",
                     "expectedControlLayout": "",
-                    "continuous": false,
-                    "passThrough": false,
-                    "processors": "",
-                    "interactions": "",
                     "bindings": []
                 },
                 {
                     "name": "Movement",
                     "id": "9a796589-f97e-42cc-b0f5-235f8acfa7a5",
                     "expectedControlLayout": "Vector2",
-                    "continuous": false,
-                    "passThrough": false,
-                    "processors": "",
-                    "interactions": "",
                     "bindings": []
                 },
                 {
                     "name": "Shoot",
                     "id": "b7f101d2-5d06-4cc1-967a-8e511e5083b3",
                     "expectedControlLayout": "",
-                    "continuous": false,
-                    "passThrough": false,
-                    "processors": "",
-                    "interactions": "",
+                    "bindings": []
+                },
+                {
+                    "name": "Pause",
+                    "id": "76320a4e-160c-4365-bc66-7b08b227b383",
+                    "expectedControlLayout": "",
                     "bindings": []
                 }
             ],
@@ -260,6 +254,30 @@
                     "processors": "",
                     "groups": ";Gamepad",
                     "action": "Shoot",
+                    "chainWithPrevious": false,
+                    "isComposite": false,
+                    "isPartOfComposite": false,
+                    "modifiers": ""
+                },
+                {
+                    "name": "right",
+                    "path": "<Keyboard>/escape",
+                    "interactions": "Press",
+                    "processors": "",
+                    "groups": ";Keyboard adn mouse",
+                    "action": "Pause",
+                    "chainWithPrevious": false,
+                    "isComposite": false,
+                    "isPartOfComposite": false,
+                    "modifiers": ""
+                },
+                {
+                    "name": "right",
+                    "path": "<Gamepad>/start",
+                    "interactions": "Press",
+                    "processors": "",
+                    "groups": ";Gamepad",
+                    "action": "Pause",
                     "chainWithPrevious": false,
                     "isComposite": false,
                     "isPartOfComposite": false,
