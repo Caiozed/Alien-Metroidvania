@@ -7,6 +7,7 @@ using UnityEngine.Experimental.Input;
 public class PlayerController : MonoBehaviour
 {
     public InputMaster Controls;
+    public AudioClip HitSound;
     public GameObject BulletPrefab, DeathEffect;
     public Transform BulletPoint, BulletPointUp, BulletPointDown, BulletPointWall, BulletPoints;
     public ParticleSystem ChargedJumpEffect;
@@ -14,6 +15,7 @@ public class PlayerController : MonoBehaviour
     public Vector2 WallJumpForce;
     public LayerMask _raycastLayerMask;
     RectTransform HeathFill;
+    AudioSource audioSource;
     Rigidbody2D _rb;
     Vector2 _direction;
     bool _btnJumpPressed = false, _isGrounded, _isDucking, _isLookingUp, _isNearWallLeft, _isNearWallRight, _isWallClinging, _isHovering, _isVulnerable;
@@ -47,6 +49,7 @@ public class PlayerController : MonoBehaviour
         anim = GetComponentInChildren<Animator>();
         _edgeCollider = GetComponent<EdgeCollider2D>();
         _boxCollider = GetComponent<BoxCollider2D>();
+        audioSource = GetComponent<AudioSource>();
         // _circleCollider = GetComponent<CircleCollider2D>();
         _lineRenderer = GetComponentInChildren<LineRenderer>();
         ghostTrail = GetComponentInChildren<SpriteGhostTrailRenderer>();
@@ -251,6 +254,8 @@ public class PlayerController : MonoBehaviour
             }
             else
             {
+                audioSource.clip = HitSound;
+                audioSource.Play();
                 anim.SetTrigger("Hit");
                 StartCoroutine("HitAnimation");
             }

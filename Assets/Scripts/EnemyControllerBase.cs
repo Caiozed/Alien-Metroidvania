@@ -18,6 +18,7 @@ public class EnemyControllerBase : MonoBehaviour
     public Animator _animator;
     [HideInInspector]
     public bool _isDead;
+    
     // Start is called before the first frame update
     void Start()
     {
